@@ -1,5 +1,6 @@
 import sqlite3
 import pandas as pd
+import time
 
 def setup_connection_and_tables():
   conn = sqlite3.connect("histories.db")
@@ -18,7 +19,7 @@ def db_coins_saved(cursor):
   return [x[0] for x in saved_coins]
 
 def save_coin_history(coin, cursor, conn):
-  df = pd.read_html("https://coinmarketcap.com/currencies/%s/historical-data/?start=20120428&end=20171227" % coin, parse_dates=["Date"])[0]
+  df = pd.read_html("https://coinmarketcap.com/currencies/%s/historical-data/?start=20120428&end=%s" % (coin, time.strftime("%Y%m%d")), parse_dates=["Date"])[0]
 
   cursor.execute("INSERT INTO coins('name') VALUES('%s')" % coin)
   conn.commit()
